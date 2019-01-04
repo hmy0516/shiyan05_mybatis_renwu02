@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.hanlu.mapper.OrdersMapper">
+    <select id="findOrderById" parameterType="int" resultType="orders">
+        SELECT * FROM tb_orders WHERE id=#{id}
+    </select>
+
+
+    <select id="findOrderById2" parameterType="int" resultMap="findOrderById2Map">
+        SELECT * FROM tb_orders WHERE id=#{id}
+    </select>
+    <resultMap id="findOrderById2Map" type="orders">
+        <id property="id" column="id"/>
+        <result property="number" column="number"/>
+        <association property="user" select="com.hanlu.mapper.UserMapper.findUserById3" column="id"/>
+     </resultMap>
+</mapper>

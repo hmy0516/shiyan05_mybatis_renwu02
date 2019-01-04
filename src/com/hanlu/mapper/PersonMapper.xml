@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hanlu.mapper.PersonMapper">
+    <resultMap id="findPersonByIdMap" type="person">
+        <id property="id" column="pId"/>
+        <result property="name" column="pName"/>
+        <result property="sex" column="pSex"/>
+        <result property="age" column="pAge"/>
+        <result property="card.id" column="cId"/>
+        <result property="card.code" column="cCode"/>
+    </resultMap>
+    <resultMap id="findPersonByIdMap2" type="person">
+        <id property="id" column="pId"/>
+        <result property="name" column="pName"/>
+        <result property="sex" column="pSex"/>
+        <result property="age" column="pAge"/>
+        <association property="card" javaType="idCard">
+            <id property="id" column="cId"/>
+            <result property="code" column="cCode"/>
+        </association>
+    </resultMap>
+
+    <select id="findPersonById" parameterType="int" resultMap="findPersonByIdMap2">
+        SELECT c.id cId,c.CODE cCode,p.id pId,p.name pName,p.sex pSex,p.age pAge,p.card_id pCard FROM tb_idcard c,tb_person p WHERE c.id=p.card_id and p.id=#{id}
+    </select>
+
+
+    <resultMap id="findPersonById2Map" type="person">
+        <id property="id" column="pId"/>
+        <result property="name" column="pName"/>
+        <result property="sex" column="pSex"/>
+        <result property="age" column="pAge"/>
+        <association property="card" select="com.hanlu.mapper.IdCardMapper.findCodeById" column="id"/>
+    </resultMap>
+    <select id="findPersonById2" parameterType="int" resultMap="findPersonById2Map">
+        SELECT * FROM tb_person WHERE id=#{id}
+    </select>
+</mapper>

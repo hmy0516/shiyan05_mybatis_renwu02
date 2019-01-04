@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.hanlu.mapper.UserMapper">
+    <select id="findUserById" parameterType="int" resultMap="findUserByIdMap">
+        SELECT u.id uId,u.username uUserName,u.address uAddress,o.id oId,o.number oNumber FROM tb_user u,tb_orders o WHERE u.id=o.user_id and u.id=#{id}
+    </select>
+    <resultMap id="findUserByIdMap" type="user">
+        <id property="id" column="uId"/>
+        <result property="username" column="uUserName"/>
+        <result property="address" column="uAddress"/>
+        <collection property="ordersList" ofType="orders">
+            <id property="id" column="oId"/>
+            <result property="number" column="oNumber"/>
+        </collection>
+    </resultMap>
+
+
+    <select id="findUserById2" parameterType="int" resultMap="findUserById2Map">
+        SELECT * FROM tb_user WHERE id=#{id}
+    </select>
+    <resultMap id="findUserById2Map" type="user">
+        <id property="id" column="id"/>
+        <result property="username" column="username"/>
+        <result property="address" column="address"/>
+        <collection property="ordersList" select="com.hanlu.mapper.OrdersMapper.findOrderById" column="id"/>
+    </resultMap>
+
+
+    <select id="findUserById3" parameterType="int" resultType="user">
+        SELECT * FROM tb_user WHERE id=#{id}
+    </select>
+</mapper>

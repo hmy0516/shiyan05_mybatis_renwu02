@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.hanlu.mapper.ProductMapper">
+    <select id="findProductById" parameterType="int" resultMap="findProductByIdMap">
+        SELECT p.id pId, p.NAME pName,p.price pPrice,o.id oId,o.number oNumber
+        FROM tb_product p,tb_orders o,tb_ordersitem oi
+        WHERE oi.orders_id=o.id
+        and oi.product_id=p.id
+        and p.id=#{id}
+    </select>
+    <resultMap id="findProductByIdMap" type="product">
+        <id property="id" column="pId"/>
+        <result property="name" column="pName"/>
+        <result property="price" column="pPrice"/>
+        <collection property="orders2List" ofType="orders2">
+            <id property="id" column="oId"/>
+            <result property="number" column="oNumber"/>
+        </collection>
+    </resultMap>
+
+    <select id="findProductById2" parameterType="int" resultMap="findProductById2Map">
+        SELECT * FROM tb_product WHERE id=#{id}
+    </select>
+    <resultMap id="findProductById2Map" type="product">
+        <id property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="price" column="price"/>
+        <collection property="orders2List" select="com.hanlu.mapper.Orders2Mapper.findOrderById" column="id"/>
+    </resultMap>
+
+
+    <select id="findProductById3" parameterType="int"
+            resultType="product">
+        SELECT * from tb_product where id IN(
+        SELECT product_id FROM tb_ordersitem  WHERE orders_id = #{id}
+        )
+    </select>
+</mapper>
